@@ -8,15 +8,16 @@ You will also need a kernel that supports the new firmware. I opted for linux-oe
 
 ## Tested Kernels
 - 5.6.0-1056-oem No issues
-- 5.10.0-1029-oem Sound works but [has microphone issues](https://github.com/stukev/XPS-17-9700-Ubuntu-Soundfix/issues/3)
-- 5.11.0-19 Should have no issues [according to Launchpad](https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1912673/comments/24)
+- 5.10.0-1029-oem output/speaker sound works but [has microphone issues](https://github.com/stukev/XPS-17-9700-Ubuntu-Soundfix/issues/3)
+- ??? Not tested, but supposedly should work according to upstream [stukev](https://github.com/stukev/XPS-17-9700-Ubuntu-Soundfix) 5.11.0-19 Should have no issues [according to Launchpad](https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1912673/comments/24)
 
 ## Setup
-1. Install the necessary kernel with `sudo apt install linux-oem-20.04`
-2. Clone the repo `git clone https://github.com/stukev/XPS-17-9700-Ubuntu-Soundfix.git`
-3. Run the fix `sudo sh XPS-17-9700-Ubuntu-Soundfix/sound_fix.sh`
-4. Remove the repo `rm XPS-17-9700-Ubuntu-Soundfix -rf`
-5. Reboot and **select your new OEM kernel in GRUB** under 'Advanced options'.
-6. If you still have no sound, check whether you used the right kernel with `uname -r`. If you did, consider opening an [issue](https://github.com/stukev/XPS-17-9700-Ubuntu-Soundfix/issues) in this git repo and maybe we can solve it together.
+1. Install Ubuntu 20.04.2
+2. Install the necessary kernel with `sudo apt install linux-buildinfo-5.6.0-1056-oem linux-headers-5.6.0-1056-oem linux-image-5.6.0-1056-oem linux-modules-5.6.0-1056-oem linux-oem-5.6-headers-5.6.0-1056 linux-oem-5.6-tools-5.6.0-1056 linux-oem-5.6-tools-host linux-tools-5.6.0-1056-oem`
+3. Clone the repo `git clone https://github.com/bg-djp/XPS-17-9700-Ubuntu-Soundfix.git`
+4. Run the fix `sudo sh XPS-17-9700-Ubuntu-Soundfix/sound_fix.sh`
+5. You may wish to comment out `#GRUB_TIMEOUT_STYLE=hidden` and set `GRUB_TIMEOUT=20` in `/etc/default/grub` and then run `sudo update-grub`
+6. Reboot and **select the 5.6.0-1056-oem kernel in GRUB** under 'Advanced options'.
+7. If you still have no sound, check whether you booted the correct kernel with `uname -a`. If you did, try running `alsamixer`, TABbing over to "ALL" and checking for muting of the `rt715 ADC 07` channel (it will look like dashes in that column; press SPACE to toggle mute/unmute. You may also want to increase the volume of that channel to a medium level with the up arrow.)
 
-Future updates from Ubuntu may break this fix. But you can always run it again if that happens.
+Future updates from Ubuntu may break this fix. Consider using `apt-mark hold` on the kernel to prevent it from being upgraded or removed.
